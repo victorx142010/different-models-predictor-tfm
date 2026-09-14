@@ -1,0 +1,37 @@
+# Entorno
+.venv/
+__pycache__/
+*.pyc
+
+# Datos y artefactos pesados (no versionar; ver requirements.txt / scripts de ingesta para regenerarlos)
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+features/quant/*
+features/nlp/*
+!features/quant/.gitkeep
+!features/nlp/.gitkeep
+
+models/*
+!models/.gitkeep
+
+results/*
+!results/.gitkeep
+
+# Notebooks: ignorar checkpoints de Jupyter
+.ipynb_checkpoints/
+
+# Configuración local de herramientas de edición
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# pytest
+.pytest_cache/

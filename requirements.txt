@@ -1,0 +1,42 @@
+# --- Ingesta de datos ---
+yfinance>=0.2.40
+pandas-datareader>=0.10.0        # respaldo stooq (§4.2.1)
+pandas_market_calendars>=4.4.0   # calendario de sesiones NYSE (§4.2.2)
+huggingface_hub>=0.24.0          # acceso a FNSPID en Hugging Face (§4.2.1)
+datasets>=2.20.0                 # lectura/streaming de FNSPID
+
+# --- Manipulación de datos ---
+pandas>=2.2.0
+polars>=1.5.0
+pyarrow>=17.0.0
+numpy>=1.26.0
+
+# --- Estadística / series temporales ---
+statsmodels>=0.14.2
+pmdarima>=2.0.4
+arch>=7.0.0                      # GARCH (§4.5.1)
+scikit-learn>=1.5.0
+
+# --- Deep learning / NLP ---
+# `pip install -r requirements.txt` instala la build CPU-only de torch desde
+# PyPI. Para GPU local (CUDA) reinstalar aparte -- ver README.md, sección
+# "Entorno".
+torch>=2.4.0
+transformers>=4.44.0             # FinBERT (§4.4)
+sentencepiece>=0.2.0              # requerido para cargar tokenizers "slow" (p.ej. yiyanghkust/finbert-tone)
+
+# --- Texto / deduplicación ---
+datasketch>=1.6.5                # MinHash para deduplicación de titulares (§4.2.3)
+
+# --- HPO ---
+optuna>=3.6.0
+
+# --- Visualización ---
+matplotlib>=3.9.0
+seaborn>=0.13.2
+
+# --- Utilidades / testing ---
+tqdm>=4.66.0
+requests>=2.32.0
+pytest>=8.3.0
+python-dateutil>=2.9.0
