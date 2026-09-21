@@ -110,7 +110,13 @@ def figura_auc(met: pd.DataFrame) -> pd.DataFrame:
     ax.set_xticks(x)
     ax.set_xticklabels([v.replace("_", "\n") for v in VARIANTS])
     ax.set_ylabel("AUC-ROC")
-    ax.set_ylim(0.36, 0.71)
+    # el eje se calcula desde los datos y no con un rango fijo: con un rango
+    # escrito a mano, un activo fuera de lo previsto queda recortado por el
+    # borde sin que se note al mirar la figura. El margen deja sitio además al
+    # radio del marcador, que dibuja centrado en su valor
+    lo, hi = met["roc_auc"].min(), met["roc_auc"].max()
+    margen = max(0.02, (hi - lo) * 0.06)
+    ax.set_ylim(lo - margen, hi + margen)
     ax.yaxis.grid(True, ls=":", lw=0.6, color="#cccccc", zorder=0)
     ax.set_axisbelow(True)
 
@@ -202,7 +208,7 @@ def figura_roc(met: pd.DataFrame, preds: pd.DataFrame) -> pd.DataFrame:
     # un solo rótulo para todos los paneles: con paneles estrechos, uno por
     # panel se solaparía con el recuadro de AUC, Kappa y p
     punto = Line2D([], [], marker="o", ls="", ms=8, mfc="#d1495b", mec="white", mew=1.2,
-                   label="Punto de operación con el umbral calibrado causal")
+                   label="Punto de operación con el umbral calibrado sesión a sesión")
     fig.legend(handles=[punto], frameon=False, loc="lower center",
                bbox_to_anchor=(0.5, -0.03 / nrows), fontsize=9)
     _save(fig, "image9.png")

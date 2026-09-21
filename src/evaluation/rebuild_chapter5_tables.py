@@ -38,7 +38,10 @@ from src.evaluation.financial_metrics import (
     TRADING_DAYS_PER_YEAR,
     compute_all_financial_metrics,
     diebold_mariano_test,
+    direction_to_strategy_returns,
     pesaran_timmermann_test,
+    sharpe_ratio,
+    sortino_ratio,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -142,13 +145,24 @@ def baseline_metrics(base_df: pd.DataFrame) -> pd.DataFrame:
     """Métricas de cada combinación activo × horizonte × línea base."""
     rows = []
     for (ticker, horizon, model), g in base_df.groupby(["ticker", "horizon", "model"]):
+        g = g.sort_values("date")
         d = g["dir_pred"].to_numpy()
         y_dir = g["y_dir"].to_numpy()
         v = g["vol_pred"].to_numpy()
         y_vol = g["y_vol"].to_numpy()
+        fwd = g["fwd_return"].to_numpy()
         m = ~np.isnan(d) & ~np.isnan(y_dir)
         mv = ~np.isnan(v) & ~np.isnan(y_vol)
         pt = pesaran_timmermann_test(d[m], y_dir[m])
+
+        # Sharpe y Sortino de la misma estrategia direccional simétrica que se
+        # aplica a las variantes, con la misma anualización 252/h. Las líneas
+        # base no pasan por la calibración del umbral porque no emiten
+        # probabilidad: su dirección ya llega binarizada en dir_pred.
+        mf = m & ~np.isnan(fwd)
+        ppy = TRADING_DAYS_PER_YEAR / horizon
+        ret = direction_to_strategy_returns(d[mf], fwd[mf], threshold=0.5)
+
         rows.append(
             {
                 "ticker": ticker,
@@ -160,6 +174,8 @@ def baseline_metrics(base_df: pd.DataFrame) -> pd.DataFrame:
                 "pt_p_value": pt["p_value"],
                 "rmse_rv": _rmse(y_vol[mv], v[mv]),
                 "mae_rv": mean_absolute_error(y_vol[mv], v[mv]),
+                "sharpe_ratio": sharpe_ratio(ret, 0.0, ppy),
+                "sortino_ratio": sortino_ratio(ret, 0.0, ppy),
                 "colapsado": len(np.unique(d[m])) == 1,
             }
         )
@@ -324,10 +340,12 @@ def build_markdown(met: pd.DataFrame, bmet: pd.DataFrame, dmi: pd.DataFrame, dmb
         nbon = int((live["pt_p_value"] < alpha_bl).sum())
         rows55.append([BASELINE_LABEL[m_], f"{ncol}/12",
                        "n/a" if len(live) == 0 else f"{nsig}/{len(live)}",
-                       "n/a" if len(live) == 0 else str(nbon)])
+                       "n/a" if len(live) == 0 else str(nbon),
+                       _f(s["sharpe_ratio"].median(), 3), _f(s["sortino_ratio"].median(), 3)])
     P.append(f"## Tabla 5.5 — Test de Pesaran-Timmermann sobre las líneas base "
              f"(36 combinaciones; Bonferroni sobre las {n_ok} no colapsadas, alfa = {_f(alpha_bl, 5)})" + A +
-             _md(["Línea base", "Colapsadas (Kappa = 0)", "Significativas", "Sobreviven Bonferroni"], rows55))
+             _md(["Línea base", "Colapsadas (Kappa = 0)", "Significativas", "Sobreviven Bonferroni",
+                  "Sharpe", "Sortino"], rows55))
 
     # Diebold-Mariano de las variantes con texto frente a price_only
     alpha_i = 0.05 / len(dmi)
