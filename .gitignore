@@ -22,6 +22,12 @@ models/*
 results/*
 !results/.gitkeep
 
+# Hiperparametros para no repetir busqueda
+!results/best_hyperparameters_h5.json
+!results/best_hyperparameters_h20.json
+!results/best_hyperparameters_h60.json
+!results/consolidado_*.csv
+
 # Notebooks: ignorar checkpoints de Jupyter
 .ipynb_checkpoints/
 

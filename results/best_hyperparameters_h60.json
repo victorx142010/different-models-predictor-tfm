@@ -1,0 +1,83 @@
+{
+  "early_fusion": {
+    "best_value": 0.539802030660212,
+    "best_params": {
+      "hidden_size": 64,
+      "num_layers": 1,
+      "dropout": 0.3144666741615739,
+      "learning_rate": 0.001,
+      "loss_weighting": "1:2"
+    },
+    "n_trials": 20,
+    "n_pruned": 9,
+    "n_complete": 11
+  },
+  "late_fusion": {
+    "best_value": 0.5594890415668488,
+    "best_params": {
+      "hidden_size": 128,
+      "num_layers": 2,
+      "dropout": 0.36759043786689605,
+      "learning_rate": 0.0005,
+      "loss_weighting": "1:2"
+    },
+    "n_trials": 20,
+    "n_pruned": 5,
+    "n_complete": 15
+  },
+  "price_only": {
+    "best_value": 0.5475943768396974,
+    "best_params": {
+      "hidden_size": 128,
+      "num_layers": 2,
+      "dropout": 0.25478490207703003,
+      "learning_rate": 0.001,
+      "loss_weighting": "1:2"
+    },
+    "n_trials": 20,
+    "n_pruned": 4,
+    "n_complete": 16
+  },
+  "text_only": {
+    "best_value": 0.5918585350736976,
+    "best_params": {
+      "hidden_size": 64,
+      "num_layers": 1,
+      "dropout": 0.23119890406724053,
+      "learning_rate": 0.0005,
+      "loss_weighting": "1:2"
+    },
+    "n_trials": 20,
+    "n_pruned": 5,
+    "n_complete": 15
+  },
+  "cross_attention": {
+    "best_value": 0.572135528549552,
+    "best_params": {
+      "hidden_size": 64,
+      "num_layers": 1,
+      "dropout": 0.27977759515958617,
+      "learning_rate": 0.0005,
+      "loss_weighting": "1:2",
+      "d_k": 32,
+      "n_heads": 4
+    },
+    "n_trials": 20,
+    "n_pruned": 7,
+    "n_complete": 13
+  },
+  "_meta": {
+    "tickers": [
+      "SPY",
+      "QQQ",
+      "KO",
+      "GS"
+    ],
+    "horizon": 60,
+    "lookback": 20,
+    "garch": "symmetric",
+    "layernorm": false,
+    "n_trials": 20,
+    "generated_at": "2026-08-08T03:14:55.671563+00:00"
+  }
+}
