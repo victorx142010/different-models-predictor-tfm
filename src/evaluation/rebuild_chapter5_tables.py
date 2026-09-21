@@ -18,7 +18,7 @@ Salida:
     results/consolidado_metricas_baselines.csv
         36 filas, una por activo × horizonte × línea base
     results/consolidado_dm_interno.csv
-        36 contrastes de las variantes con texto frente a price_only
+        48 contrastes de las variantes con texto frente a price_only
     results/consolidado_dm_baselines.csv
         180 contrastes de las variantes frente a las líneas base
     results/tablas_capitulo5.md
@@ -48,7 +48,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = PROJECT_ROOT / "results"
 
 VARIANTS = ("price_only", "text_only", "early_fusion", "late_fusion", "cross_attention")
-TEXT_VARIANTS = ("early_fusion", "cross_attention", "text_only")
+TEXT_VARIANTS = ("early_fusion", "late_fusion", "cross_attention", "text_only")
 BASELINES = ("random_walk", "naive_persistente", "arima_garch")
 BASELINE_LABEL = {
     "random_walk": "Camino aleatorio",
@@ -358,7 +358,7 @@ def build_markdown(met: pd.DataFrame, bmet: pd.DataFrame, dmi: pd.DataFrame, dmb
         mejor_b = int(((s.dm_p_value < alpha_i) & (s.mean_loss_diff < 0)).sum())
         rows56.append([f"*{v}*", str(peor_n), str(mejor_n), str(peor_b), str(mejor_b)])
     P.append(f"## Tabla 5.6 — Diebold-Mariano frente a `price_only` sobre volatilidad "
-             f"(12 combinaciones x 3 variantes; Bonferroni sobre {len(dmi)} tests, alfa = {_f(alpha_i, 5)})" + A +
+             f"(12 combinaciones x {len(TEXT_VARIANTS)} variantes; Bonferroni sobre {len(dmi)} tests, alfa = {_f(alpha_i, 5)})" + A +
              _md(["Variante", "Peor (nominal)", "Mejor (nominal)", "Peor (Bonferroni)", "Mejor (Bonferroni)"], rows56))
 
     # ranking de todos los modelos por RMSE de volatilidad
